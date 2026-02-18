@@ -193,7 +193,7 @@ form.addEventListener("submit", async (ev) => {
     account: accountInput.value.trim(),
     realm: realmSelect.value,
     character: manualCharacter || selectedCharacter || null,
-    contact: document.getElementById("contact").value.trim(),
+    contact: document.getElementById("contact").value.trim() || null,
     intent: document.getElementById("intent").value || null,
   };
 
@@ -211,7 +211,7 @@ form.addEventListener("submit", async (ev) => {
       throw new Error(note);
     }
 
-    latestRun = { run_id: data.run_id, contact: payload.contact };
+    latestRun = { run_id: data.run_id, contact: payload.contact || null };
     renderSummary(data);
     setStatus("Preview complete. Review your output below.");
     resultsEl.classList.remove("hidden");
@@ -231,7 +231,7 @@ interestForm.addEventListener("submit", async (ev) => {
 
   const payload = {
     run_id: latestRun.run_id,
-    contact: latestRun.contact,
+    contact: latestRun.contact || null,
     rating: document.getElementById("rating").value ? Number(document.getElementById("rating").value) : null,
     intent: document.getElementById("intent-followup").value || null,
     notes: document.getElementById("notes").value || null,

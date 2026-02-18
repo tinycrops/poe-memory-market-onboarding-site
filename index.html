@@ -7,85 +7,91 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Jura:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="fx-shroud" aria-hidden="true"></div>
-    <div class="fx-runes" aria-hidden="true"></div>
+    <div class="sky-veil" aria-hidden="true"></div>
+    <div class="ashfall" aria-hidden="true"></div>
 
     <main class="container">
-      <section class="hero panel panel-hero">
+      <section class="banner">
         <p class="eyebrow">Path of Exile Build Intelligence</p>
-        <h1>Extract your market memory before your next map.</h1>
-        <p class="hero-copy">
-          Connect your public account to preview holdings valuation, LOG/LEARN/NEXT output, and build-card content in under a minute.
+        <h1>Map. Price. Adapt.</h1>
+        <p class="intro">
+          Pull your public character data, price liquid holdings, and generate LOG/LEARN/NEXT build notes from one onboarding flow.
         </p>
-        <div class="hero-tags">
-          <span>Market-Aware</span>
-          <span>Live Character Snapshot</span>
-          <span>Persona Build Notes</span>
-        </div>
       </section>
 
-      <section class="panel">
-        <form id="onboard-form">
-          <div class="field-row">
+      <section class="layout">
+        <aside class="lore panel">
+          <h2>What You Get</h2>
+          <ul>
+            <li>Newest character picked first automatically</li>
+            <li>Snapshot valuation of trade-relevant holdings</li>
+            <li>Build-card preview for your next upgrade pass</li>
+          </ul>
+        </aside>
+
+        <section class="panel form-panel">
+          <form id="onboard-form">
+            <div class="field-row">
+              <label>
+                Account (Name#1234)
+                <input id="account" name="account" required placeholder="Name#1234" autocomplete="off" />
+              </label>
+              <label>
+                Realm
+                <select id="realm" name="realm" required>
+                  <option value="pc">pc</option>
+                  <option value="xbox">xbox</option>
+                  <option value="sony">sony</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label>
+                Character (auto-loaded)
+                <select id="character-select" name="character-select">
+                  <option value="">Auto-select newest character</option>
+                </select>
+                <span id="character-loading" class="character-loading hidden" aria-live="polite">
+                  <span class="spinner" aria-hidden="true"></span>
+                  Reading account roster...
+                </span>
+              </label>
+              <label>
+                Contact (optional)
+                <input id="contact" name="contact" placeholder="Discord or email" />
+              </label>
+            </div>
+
             <label>
-              Account (Name#1234)
-              <input id="account" name="account" required placeholder="Name#1234" autocomplete="off" />
+              Manual character override (optional)
+              <input id="character-manual" name="character-manual" placeholder="Only if missing from the dropdown" />
             </label>
+
+            <p id="character-meta" class="fine-print">
+              Enter account + realm to auto-load characters. Newest created characters are listed first when available.
+            </p>
+
             <label>
-              Realm
-              <select id="realm" name="realm" required>
-                <option value="pc">pc</option>
-                <option value="xbox">xbox</option>
-                <option value="sony">sony</option>
+              Would you pay if this works?
+              <select id="intent" name="intent">
+                <option value="">Select one</option>
+                <option value="yes">Yes</option>
+                <option value="maybe">Maybe</option>
+                <option value="no">No</option>
               </select>
             </label>
-          </div>
 
-          <div class="field-row">
-            <label>
-              Character (loaded from account)
-              <select id="character-select" name="character-select">
-                <option value="">Auto-select newest character</option>
-              </select>
-              <span id="character-loading" class="character-loading hidden" aria-live="polite">
-                <span class="spinner" aria-hidden="true"></span>
-                Fetching characters...
-              </span>
-            </label>
-            <label>
-              Contact (Discord or email)
-              <input id="contact" name="contact" required placeholder="you@site.com or user#1234" />
-            </label>
-          </div>
-
-          <label>
-            Manual character override (optional)
-            <input id="character-manual" name="character-manual" placeholder="Only if your character is missing above" />
-          </label>
-
-          <p id="character-meta" class="fine-print">
-            Enter account + realm to auto-load characters. Newest created characters are listed first when available.
-          </p>
-
-          <label>
-            Would you pay if this works?
-            <select id="intent" name="intent">
-              <option value="">Select one</option>
-              <option value="yes">Yes</option>
-              <option value="maybe">Maybe</option>
-              <option value="no">No</option>
-            </select>
-          </label>
-
-          <button id="submit-btn" type="submit">Run My Snapshot</button>
-          <p class="fine-print">Public profiles only in this beta. Private profiles may fail without auth.</p>
-        </form>
+            <button id="submit-btn" type="submit">Run My Snapshot</button>
+            <p class="fine-print">Public profiles only. Private profiles will fail without auth-enabled support.</p>
+          </form>
+        </section>
       </section>
 
       <section id="status" class="status hidden"></section>
