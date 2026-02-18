@@ -9,8 +9,17 @@ const holdingsList = document.getElementById("holdings-list");
 const cardView = document.getElementById("card-view");
 const summaryCards = document.getElementById("summary-cards");
 const submitBtn = document.getElementById("submit-btn");
+const accountInput = document.getElementById("account");
+const realmSelect = document.getElementById("realm");
+const characterSelect = document.getElementById("character-select");
+const characterManualInput = document.getElementById("character-manual");
+const characterMeta = document.getElementById("character-meta");
+const characterLoading = document.getElementById("character-loading");
 
 let latestRun = null;
+let characterLoadToken = 0;
+let characterDebounceTimer = null;
+let lastCharacterLookupKey = "";
 
 function setStatus(message, kind = "info") {
   statusEl.className = `status ${kind}`;
@@ -43,9 +52,11 @@ function renderSummary(data) {
   postsView.textContent = (data.posts || []).join("\n") || "No posts generated.";
 
   const holdings = p.top_holdings || [];
-  holdingsList.innerHTML = holdings
-    .map((h) => `<li>${escapeHtml(h.label)} x${escapeHtml(h.quantity)} (~${escapeHtml(h.chaos_value)}c)</li>`)
-    .join("");
+  holdingsList.innerHTML = holdings.length
+    ? holdings
+        .map((h) => `<li>${escapeHtml(h.label)} x${escapeHtml(h.quantity)} (~${escapeHtml(h.chaos_value)}c)</li>`)
+        .join("")
+    : "<li>No priced holdings found.</li>";
 
   const card = data.build_card || {};
   const fields = card.fields || [];
@@ -58,17 +69,131 @@ function renderSummary(data) {
   `;
 }
 
+function setCharacterMeta(text) {
+  characterMeta.textContent = text;
+}
+
+function resetCharacterDropdown() {
+  characterSelect.innerHTML = '<option value="">Auto-select newest character</option>';
+}
+
+function setCharacterLoading(isLoading) {
+  characterSelect.disabled = isLoading;
+  characterLoading.classList.toggle("hidden", !isLoading);
+}
+
+function scheduleCharacterLookup() {
+  if (characterDebounceTimer) {
+    clearTimeout(characterDebounceTimer);
+  }
+  characterDebounceTimer = setTimeout(() => {
+    void loadCharacters();
+  }, 450);
+}
+
+async function loadCharacters(force = false) {
+  const account = accountInput.value.trim();
+  const realm = realmSelect.value;
+
+  if (account.length < 3) {
+    setCharacterLoading(false);
+    resetCharacterDropdown();
+    setCharacterMeta("Enter account + realm to auto-load characters. Newest created characters are listed first when available.");
+    lastCharacterLookupKey = "";
+    return;
+  }
+
+  const lookupKey = `${account}|${realm}`;
+  if (!force && lookupKey === lastCharacterLookupKey) {
+    return;
+  }
+
+  setCharacterLoading(true);
+  setCharacterMeta("Loading characters from Path of Exile...");
+  const token = ++characterLoadToken;
+
+  try {
+    const resp = await fetch(
+      `${API_BASE}/api/onboard/characters?account=${encodeURIComponent(account)}&realm=${encodeURIComponent(realm)}`
+    );
+    const data = await resp.json();
+
+    if (token !== characterLoadToken) {
+      return;
+    }
+
+    if (!resp.ok) {
+      const detail = data.detail || "lookup failed";
+      throw new Error(detail);
+    }
+
+    resetCharacterDropdown();
+    const chars = Array.isArray(data.characters) ? data.characters : [];
+    for (const ch of chars) {
+      const name = String(ch.name || "").trim();
+      if (!name) {
+        continue;
+      }
+      const parts = [];
+      if (typeof ch.level === "number") {
+        parts.push(`lvl ${ch.level}`);
+      }
+      if (ch.class) {
+        parts.push(String(ch.class));
+      }
+      if (ch.league) {
+        parts.push(String(ch.league));
+      }
+      const label = parts.length ? `${name} (${parts.join(" | ")})` : name;
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = label;
+      characterSelect.appendChild(opt);
+    }
+
+    if (chars.length > 0 && characterSelect.options.length > 1) {
+      characterSelect.value = characterSelect.options[1].value;
+    }
+
+    lastCharacterLookupKey = lookupKey;
+    if (chars.length === 0) {
+      setCharacterMeta("No public characters found for this account/realm.");
+    } else {
+      const sortText = data.sort_hint === "created_at" ? "sorted by creation timestamp" : "sorted using best available order";
+      setCharacterMeta(`Loaded ${chars.length} character${chars.length === 1 ? "" : "s"}; ${sortText}.`);
+    }
+  } catch (err) {
+    resetCharacterDropdown();
+    setCharacterMeta(`Could not load characters automatically: ${err.message}`);
+    lastCharacterLookupKey = "";
+  } finally {
+    setCharacterLoading(false);
+  }
+}
+
+accountInput.addEventListener("input", scheduleCharacterLookup);
+accountInput.addEventListener("blur", () => {
+  void loadCharacters();
+});
+realmSelect.addEventListener("change", () => {
+  lastCharacterLookupKey = "";
+  void loadCharacters(true);
+});
+
 form.addEventListener("submit", async (ev) => {
   ev.preventDefault();
   hideStatus();
   resultsEl.classList.add("hidden");
   submitBtn.disabled = true;
 
+  const manualCharacter = characterManualInput.value.trim();
+  const selectedCharacter = characterSelect.value.trim();
+
   const payload = {
-    account: document.getElementById("account").value,
-    realm: document.getElementById("realm").value,
-    character: document.getElementById("character").value || null,
-    contact: document.getElementById("contact").value,
+    account: accountInput.value.trim(),
+    realm: realmSelect.value,
+    character: manualCharacter || selectedCharacter || null,
+    contact: document.getElementById("contact").value.trim(),
     intent: document.getElementById("intent").value || null,
   };
 

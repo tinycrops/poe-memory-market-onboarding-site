@@ -6,19 +6,28 @@
     <title>PoE Memory+Market Onboarding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo+Black&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="fx-shroud" aria-hidden="true"></div>
+    <div class="fx-runes" aria-hidden="true"></div>
+
     <main class="container">
-      <section class="hero">
+      <section class="hero panel panel-hero">
         <p class="eyebrow">Path of Exile Build Intelligence</p>
-        <h1>See your market-aware build memory in under a minute.</h1>
-        <p>
-          Enter your PoE account and get a live preview of what this product posts:
-          top holdings, structured LOG/LEARN/NEXT notes, and a build intelligence card.
+        <h1>Extract your market memory before your next map.</h1>
+        <p class="hero-copy">
+          Connect your public account to preview holdings valuation, LOG/LEARN/NEXT output, and build-card content in under a minute.
         </p>
+        <div class="hero-tags">
+          <span>Market-Aware</span>
+          <span>Live Character Snapshot</span>
+          <span>Persona Build Notes</span>
+        </div>
       </section>
 
       <section class="panel">
@@ -26,7 +35,7 @@
           <div class="field-row">
             <label>
               Account (Name#1234)
-              <input id="account" name="account" required placeholder="Name#1234" />
+              <input id="account" name="account" required placeholder="Name#1234" autocomplete="off" />
             </label>
             <label>
               Realm
@@ -40,14 +49,29 @@
 
           <div class="field-row">
             <label>
-              Character (optional)
-              <input id="character" name="character" placeholder="OpenClawZeroZeroZero" />
+              Character (loaded from account)
+              <select id="character-select" name="character-select">
+                <option value="">Auto-select newest character</option>
+              </select>
+              <span id="character-loading" class="character-loading hidden" aria-live="polite">
+                <span class="spinner" aria-hidden="true"></span>
+                Fetching characters...
+              </span>
             </label>
             <label>
               Contact (Discord or email)
               <input id="contact" name="contact" required placeholder="you@site.com or user#1234" />
             </label>
           </div>
+
+          <label>
+            Manual character override (optional)
+            <input id="character-manual" name="character-manual" placeholder="Only if your character is missing above" />
+          </label>
+
+          <p id="character-meta" class="fine-print">
+            Enter account + realm to auto-load characters. Newest created characters are listed first when available.
+          </p>
 
           <label>
             Would you pay if this works?
