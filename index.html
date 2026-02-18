@@ -11,62 +11,89 @@
   </head>
   <body>
     <main class="container">
-      <section class="panel hero">
-        <p class="eyebrow">Path of Exile Build Intelligence</p>
-        <h1>Character-first onboarding</h1>
-        <p>Step 1: submit account + realm. Step 2: choose character from newest-first list.</p>
+      <section id="onboarding-view">
+        <section class="panel hero">
+          <p class="eyebrow">Path of Exile Build Intelligence</p>
+          <h1>Character-first onboarding</h1>
+          <p>Step 1: submit account + realm. Step 2: choose character from newest-first list.</p>
+        </section>
+
+        <section class="panel">
+          <form id="lookup-form">
+            <div class="field-row">
+              <label>
+                Account (Name#1234)
+                <input id="account" name="account" required placeholder="Name#1234" autocomplete="off" />
+              </label>
+              <label>
+                Realm
+                <select id="realm" name="realm" required>
+                  <option value="pc">pc</option>
+                  <option value="xbox">xbox</option>
+                  <option value="sony">sony</option>
+                </select>
+              </label>
+            </div>
+            <button id="lookup-btn" type="submit">Load Characters</button>
+            <p id="character-meta" class="fine-print">No lookup has run yet.</p>
+          </form>
+        </section>
+
+        <section id="character-panel" class="panel hidden">
+          <label>
+            Character (ordered newest first when available)
+            <select id="character-select" name="character-select">
+              <option value="">Auto-select newest character</option>
+            </select>
+          </label>
+          <button id="run-btn" type="button">Run Preview for Selected Character</button>
+        </section>
+
+        <section id="status" class="status hidden"></section>
       </section>
 
-      <section class="panel">
-        <form id="lookup-form">
-          <div class="field-row">
-            <label>
-              Account (Name#1234)
-              <input id="account" name="account" required placeholder="Name#1234" autocomplete="off" />
-            </label>
-            <label>
-              Realm
-              <select id="realm" name="realm" required>
-                <option value="pc">pc</option>
-                <option value="xbox">xbox</option>
-                <option value="sony">sony</option>
-              </select>
-            </label>
-          </div>
-          <button id="lookup-btn" type="submit">Load Characters</button>
-          <p id="character-meta" class="fine-print">No lookup has run yet.</p>
-        </form>
-      </section>
+      <section id="results-view" class="hidden">
+        <section class="panel hero">
+          <p class="eyebrow">Preview Result</p>
+          <h1>Build Card Preview</h1>
+          <p id="run-meta" class="fine-print">Loading run...</p>
+          <button id="new-run-btn" type="button">Start New Character Run</button>
+        </section>
 
-      <section id="character-panel" class="panel hidden">
-        <label>
-          Character (ordered newest first when available)
-          <select id="character-select" name="character-select">
-            <option value="">Auto-select newest character</option>
-          </select>
-        </label>
-        <button id="run-btn" type="button">Run Preview for Selected Character</button>
-      </section>
+        <section id="results-status" class="status hidden"></section>
 
-      <section id="status" class="status hidden"></section>
+        <section id="results" class="results hidden">
+          <div class="cards" id="summary-cards"></div>
 
-      <section id="results" class="results hidden">
-        <div class="cards" id="summary-cards"></div>
+          <article class="panel">
+            <h2>LOG / LEARN / NEXT</h2>
+            <pre id="posts-view"></pre>
+          </article>
 
-        <article class="panel">
-          <h2>LOG / LEARN / NEXT</h2>
-          <pre id="posts-view"></pre>
-        </article>
+          <article class="panel">
+            <h2>Top Holdings</h2>
+            <ul id="holdings-list"></ul>
+          </article>
 
-        <article class="panel">
-          <h2>Top Holdings</h2>
-          <ul id="holdings-list"></ul>
-        </article>
+          <article class="panel">
+            <h2>Build Card Preview</h2>
+            <div id="card-view"></div>
+          </article>
 
-        <article class="panel">
-          <h2>Build Card Preview</h2>
-          <div id="card-view"></div>
-        </article>
+          <article class="panel">
+            <h2>Want Follow-up?</h2>
+            <form id="interest-form" class="field-row">
+              <label>
+                Contact (optional)
+                <input id="contact" name="contact" placeholder="email or discord" autocomplete="off" />
+              </label>
+              <div class="inline-actions">
+                <button id="interest-btn" type="submit">Send me follow-up</button>
+              </div>
+            </form>
+            <p id="interest-meta" class="fine-print">No contact submitted yet.</p>
+          </article>
+        </section>
       </section>
     </main>
 

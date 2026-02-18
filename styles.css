@@ -171,9 +171,23 @@ pre {
   font-size: 0.92rem;
 }
 
+.inline-actions {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 0.8rem;
+}
+
+#new-run-btn {
+  margin-top: 0.75rem;
+}
+
 @media (max-width: 780px) {
   .field-row,
   .cards {
     grid-template-columns: 1fr;
+  }
+
+  .inline-actions {
+    margin-top: -0.2rem;
   }
 }
