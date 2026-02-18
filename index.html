@@ -6,92 +6,46 @@
     <title>PoE Memory+Market Onboarding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Jura:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Jura:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="sky-veil" aria-hidden="true"></div>
-    <div class="ashfall" aria-hidden="true"></div>
-
     <main class="container">
-      <section class="banner">
+      <section class="panel hero">
         <p class="eyebrow">Path of Exile Build Intelligence</p>
-        <h1>Map. Price. Adapt.</h1>
-        <p class="intro">
-          Pull your public character data, price liquid holdings, and generate LOG/LEARN/NEXT build notes from one onboarding flow.
-        </p>
+        <h1>Character-first onboarding</h1>
+        <p>Step 1: submit account + realm. Step 2: choose character from newest-first list.</p>
       </section>
 
-      <section class="layout">
-        <aside class="lore panel">
-          <h2>What You Get</h2>
-          <ul>
-            <li>Newest character picked first automatically</li>
-            <li>Snapshot valuation of trade-relevant holdings</li>
-            <li>Build-card preview for your next upgrade pass</li>
-          </ul>
-        </aside>
-
-        <section class="panel form-panel">
-          <form id="onboard-form">
-            <div class="field-row">
-              <label>
-                Account (Name#1234)
-                <input id="account" name="account" required placeholder="Name#1234" autocomplete="off" />
-              </label>
-              <label>
-                Realm
-                <select id="realm" name="realm" required>
-                  <option value="pc">pc</option>
-                  <option value="xbox">xbox</option>
-                  <option value="sony">sony</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="field-row">
-              <label>
-                Character (auto-loaded)
-                <select id="character-select" name="character-select">
-                  <option value="">Auto-select newest character</option>
-                </select>
-                <span id="character-loading" class="character-loading hidden" aria-live="polite">
-                  <span class="spinner" aria-hidden="true"></span>
-                  Reading account roster...
-                </span>
-              </label>
-              <label>
-                Contact (optional)
-                <input id="contact" name="contact" placeholder="Discord or email" />
-              </label>
-            </div>
-
+      <section class="panel">
+        <form id="lookup-form">
+          <div class="field-row">
             <label>
-              Manual character override (optional)
-              <input id="character-manual" name="character-manual" placeholder="Only if missing from the dropdown" />
+              Account (Name#1234)
+              <input id="account" name="account" required placeholder="Name#1234" autocomplete="off" />
             </label>
-
-            <p id="character-meta" class="fine-print">
-              Enter account + realm to auto-load characters. Newest created characters are listed first when available.
-            </p>
-
             <label>
-              Would you pay if this works?
-              <select id="intent" name="intent">
-                <option value="">Select one</option>
-                <option value="yes">Yes</option>
-                <option value="maybe">Maybe</option>
-                <option value="no">No</option>
+              Realm
+              <select id="realm" name="realm" required>
+                <option value="pc">pc</option>
+                <option value="xbox">xbox</option>
+                <option value="sony">sony</option>
               </select>
             </label>
+          </div>
+          <button id="lookup-btn" type="submit">Load Characters</button>
+          <p id="character-meta" class="fine-print">No lookup has run yet.</p>
+        </form>
+      </section>
 
-            <button id="submit-btn" type="submit">Run My Snapshot</button>
-            <p class="fine-print">Public profiles only. Private profiles will fail without auth-enabled support.</p>
-          </form>
-        </section>
+      <section id="character-panel" class="panel hidden">
+        <label>
+          Character (ordered newest first when available)
+          <select id="character-select" name="character-select">
+            <option value="">Auto-select newest character</option>
+          </select>
+        </label>
+        <button id="run-btn" type="button">Run Preview for Selected Character</button>
       </section>
 
       <section id="status" class="status hidden"></section>
@@ -112,30 +66,6 @@
         <article class="panel">
           <h2>Build Card Preview</h2>
           <div id="card-view"></div>
-        </article>
-
-        <article class="panel">
-          <h2>How useful was this preview?</h2>
-          <form id="interest-form">
-            <label>
-              Rating (1-5)
-              <input id="rating" type="number" min="1" max="5" />
-            </label>
-            <label>
-              Intent
-              <select id="intent-followup">
-                <option value="">No change</option>
-                <option value="yes">Yes</option>
-                <option value="maybe">Maybe</option>
-                <option value="no">No</option>
-              </select>
-            </label>
-            <label>
-              Notes
-              <textarea id="notes" rows="3" placeholder="What would make this a must-have?"></textarea>
-            </label>
-            <button type="submit">Save Interest</button>
-          </form>
         </article>
       </section>
     </main>
